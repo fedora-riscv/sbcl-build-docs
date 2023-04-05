@@ -33,7 +33,7 @@
   ```
   通读源码后发现，build-config是包含环境变量的文件，根据再三搜索确定`build-config`应该从虚拟机中生成的，所以在ssh那行命令理应将该文件复制到本地，可是缺缺失了这一段
 
-  而根据上面的那行`mv build-id.inc output`，可以知道作者的意图是将build-id.inc移动到output目录下，但有没有可能刚刚clone下来的源码里并无output目录？这种情况下，build-id.inc就会被重命名成output文件，随后引发又一系列奇怪问题
+  而根据上面的那行`mv build-id.inc output`，可以知道作者的意图是将build-id.inc移动到output目录下，但有没有可能刚刚clone下来的源码里并无output目录？这种情况下，build-id.inc就会被重命名成output文件，随后引发又一系列奇怪问题，这个脚本真的是年久失修
 
   因此这里引入[该patch文件](https://github.com/fedora-riscv/sbcl-build-docs/blob/main/sbcl-cross-make.patch)用于解决这个问题，**同时请务必`mkdir output`确保output目录存在**
 
@@ -61,3 +61,4 @@ debugger invoked on a TYPE-ERROR @566B4C9C in thread
     SB-C:L0CATION-INFO
 Type HELP for debugger help,or (SB-EXT:EXIT) to exit from SBCL.
 ```
+该问题到目前为止暂时无解
