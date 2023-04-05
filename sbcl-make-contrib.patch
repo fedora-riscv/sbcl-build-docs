@@ -1,0 +1,33 @@
+diff --git a/contrib/make-contrib.lisp b/contrib/make-contrib.lisp
+index 02be0fa47..c08b4d1c7 100644
+--- a/contrib/make-contrib.lisp
++++ b/contrib/make-contrib.lisp
+@@ -147,12 +147,24 @@
+                              :direction :output :if-exists :supersede
+                              :if-does-not-exist :create)
+           (format asd "(defsystem :~A :class require-system)~%" *system*))
+-        (sb-sys:os-exit
+-         (process-status
++        ;;(sb-sys:os-exit
++         ;;(process-status
+           ;; for #+win32 it's probably /usr/bin/cat.exe,
+           ;; for #+unix it's supposed to be /bin/cat, but lp#1995224 says otherwise
+-          (run-program "cat" outputs :search t
+-                       :output joined :if-output-exists :supersede)))))))
++          ;;(run-program "cat" outputs :search t
++                       ;;:output joined :if-output-exists :supersede)))))))
++         (let ((cmd (format nil "cat ~{~a~^ ~} > ~A" outputs joined)))
++                (with-open-file (stream "cat.sh"
++                                        :direction :output
++                                        :if-exists :supersede)
++                  (write-string cmd stream)
++                )
++          )
++          (sb-sys:os-exit
++            (process-status
++          ;; for #+win32 it's probably /usr/bin/cat.exe,
++          ;; for #+unix it's supposed to be /bin/cat, but lp#1995224 says otherwise
++            (run-program "sh" (list "cat.sh") :search t)))))))
+
+ (compile 'perform)
+ (let ((form (with-open-file (f (format nil "~A.asd" *system*))
