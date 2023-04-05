@@ -1,0 +1,15 @@
+diff --git a/cross-make.sh b/cross-make.sh
+index 370c9a12e..4b8a735bd 100755
+--- a/cross-make.sh
++++ b/cross-make.sh
+@@ -45,8 +45,9 @@ set -ex
+ ssh $ssh_port_opt $host cd $root \; $checkout '&&' \
+   $ENV sh make-config.sh $config_options '&&' \
+   mv version.lisp-expr remote-version.lisp-expr
+-scp $scp_port_opt $host:$root/{remote-version.lisp-expr,local-target-features.lisp-expr,output/build-id.inc} .
++scp $scp_port_opt $host:$root/{remote-version.lisp-expr,local-target-features.lisp-expr,output/build-id.inc,output/build-config} .
+ mv build-id.inc output
++mv build-config output
+ #diff version.lisp-expr remote-version.lisp-expr || exit 1
+
+ # make-host-1 and copy the generated C headers to the target machine
